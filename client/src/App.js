@@ -1,15 +1,68 @@
-import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-import getWeb3 from "./getWeb3";
-import TruffleContract from "@truffle/contract";
-
 import "./App.css";
+import getWeb3 from "./getWeb3";
+import React, { Component, useState, useEffect } from "react";
+import logo from './logo.png';
+import Home from './components/Home';
+import Registo from './components/Registo';
+import Urna from './components/Urna';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Eleicao from "./contracts/Eleicao.json";
+import { Switch, Route, Link } from "react-router-dom";
+import {Container, Navbar, Nav, Toast, Col, Row, Button, ToastContainer} from 'react-bootstrap';
 
-class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+
+export default class App extends Component {
+  
+  constructor(props){
+    super(props);
+    this.closeAlert = this.closeAlert.bind(this);
+    this.ouvirEventos = this.ouvirEventos.bind(this);
+    this.registarEleitor = this.registarEleitor.bind(this);
+    
+    this.state = { 
+      alertShow: false,
+      alertSuccess: false, 
+      web3: null, 
+      accounts: null, 
+      contract: null,
+      nome: null,
+      bi: null,
+      endereco: null,
+      toast: false,
+      toastMessage: null,
+      numeroEleitores: 0, 
+    };
+  }
+
+  timeOut = () => {
+    setTimeout(() => {
+      this.setState({toast: false});
+    }, 3000);
+  }
+  
+  registarEleitor = async (nome, bi, endereco) => {
+    if(bi.length < 14) {  
+      this.setState({toast: true, toastMessage: 'Bilhete de identidade inválido.'});
+      this.timeOut();
+    } else if(!this.state.web3.utils.isHexStrict(endereco) || !this.state.web3.utils.isAddress(endereco)) {
+      this.setState({toast: true, toastMessage: 'Endereço inválido.'});
+      this.timeOut();
+    } else {
+      const r = window.confirm("Registar ?" + "\n" + nome + "\n" + bi +"\n"+ endereco);
+      if(r){
+        try{
+          await this.state.contract.methods.registarEleitor(nome, bi, endereco).send({from: this.state.accounts[0]});
+        }catch(error){
+          alert("ERRO ! Registo não efectuado");
+        }
+      }
+    }
+  }
 
   componentDidMount = async () => {
+
     try {
+
       // Obter o provedor de rede e a instância web3.
       const web3 = await getWeb3();
 
@@ -18,60 +71,145 @@ class App extends Component {
 
       // Obter a instância do contrato.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = Eleicao.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        Eleicao.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
-      // const instance = TruffleContract(SimpleStorageContract);
-      // instance.setProvider(web3);
-
-      // Defina web3, contas e contrato para o estado e, em seguida, prossiga com um
-      // exemplo de interação com os métodos do contrato.
       this.setState({ web3, accounts, contract: instance }, this.runExample);
     } catch (error) {
-      // Capture quaisquer erros de qualquer uma das operações acima.
       alert(
         `Falha ao carregar web3, contas ou contrato. Verifique o console para obter detalhes.`,
       );
       console.error(error);
     }
+    this.ouvirEventos();
   };
+
+  // componentDidUpdate
+
+  ouvirEventos() {
+    this.state.contract.events.Registado({})
+      .on('data', (event) => {
+        this.showAlert(true, event.returnValues[0], event.returnValues[1], event.returnValues[2])
+    })
+    .on('error', (event) =>{
+      alert('ERRO! Registo não efectuado');
+      console.log(event.returnValues);
+    });
+  }
 
   runExample = async () => {
-    const { accounts, contract } = this.state;
-
-    // Armazena um determinado valor, 5 por padrão.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
-    // Obter o valor do contrato para provar que funcionou.
-    const response = await contract.methods.get().call();
-
-    // Atualize o estado com o resultado.
-    this.setState({ storageValue: response });
+    this.setState({numeroEleitores: await this.state.contract.methods.numeroEleitores().call()});
   };
 
+  showAlert(isSuccess, _nome, _bi, _endereco) {
+    this.setState({alertShow: true, alertSuccess: isSuccess, nome: _nome, bi: _bi, endereco: _endereco});
+  }
+
+  closeAlert() {
+    this.setState({alertShow: false});
+  }
+
   render() {
+    
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 42</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
-      </div>
+        <NavBar registar = {this.registarEleitor} fecharAlert = {this.closeAlert} {...this.state}/>
     );
   }
+
 }
 
-export default App;
+const NavBar = (props) => {
+  return (
+  <>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand>
+              <Nav.Item>
+                  <Nav.Link href="/home" as={Link} to="/">
+                      <img
+                      alt=""
+                      src={logo}
+                      width="100"
+                      height="100"
+                      className="d-inline-block"
+                      />
+                  <p class="fw-bolder mx-1 text-light text-muted">E-VOTING</p>
+                  </Nav.Link>
+              </Nav.Item>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+              <Nav className="me-auto" variant="pills">
+                  <Nav.Item>
+                      <Nav.Link href="/home" as={Link} to="/" eventKey = "link1">INÍCIO</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                      <Nav.Link href="/registo"as={Link} to="/registo" eventKey = "link2">REGISTO</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                      <Nav.Link href="/urna"as={Link} to="/urna" eventKey = "link3">URNA</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                      <Nav.Link eventKey="disabled" disabled>
+                      Disabled
+                      </Nav.Link>
+                  </Nav.Item>
+              </Nav>
+              <Nav>
+                  <Nav.Link>End.</Nav.Link>
+                      <Nav.Link eventKey={2}>
+                          {props.accounts}
+                      </Nav.Link>
+              </Nav>
+          </Navbar.Collapse>
+          </Container>
+      </Navbar>
+
+      <Switch>
+          <Route path="/registo">
+              { props.toast && <ToastWarning mensagem = {props.toastMessage} /> }
+              <Registo contract = {props.contract} accounts = {props.accounts} registar = {props.registar} alertRegisto = {props.alertShow} fecharAlert = {props.fecharAlert} alertSuccess = {props.alertSuccess} nome = {props.nome} bi = {props.bi} endereco = {props.endereco}/>
+          </Route>
+          <Route path="/urna">
+              <Urna path="/urna"/>
+          </Route>
+          <Route exact path="/">
+              <Home />
+          </Route>
+      </Switch>
+  </>
+);
+}
+
+function ToastWarning(props) {
+
+  const [show, setShow] = useState(true);
+
+  return (
+    <Row>
+      <Col xs={6}>
+      <ToastContainer position="top-center" className="p-3">
+        <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide bg = "warning">
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded me-2"
+              alt=""
+            />
+            <strong className="me-auto">Falha!</strong>
+          </Toast.Header>
+          <Toast.Body>{props.mensagem}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+      </Col>
+    </Row>
+  );
+}
+
+

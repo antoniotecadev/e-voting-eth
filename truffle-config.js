@@ -11,7 +11,13 @@ module.exports = {
       network_id: "*" // Match any network id
     },
     develop: {
-      port: 8545
+      port: 9545
+    },
+    ganachecli: {
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "*" // Match any network id
     }
+    
   }
 };

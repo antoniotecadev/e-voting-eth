@@ -1,0 +1,103 @@
+// import Eleicao from "../contracts/Eleicao.json";
+// import getWeb3 from "../getWeb3";
+    
+//     var Singleton = (async function () {
+//     var instance;
+
+//     const web3 = await getWeb3();
+
+//     const networkId = await web3.eth.net.getId();
+//     const deployedNetwork = Eleicao.networks[networkId];
+
+//     function createInstance() {
+//         var instance = new web3.eth.Contract(
+//         Eleicao.abi,
+//         deployedNetwork && deployedNetwork.address,
+//       );
+//         return instance;
+//     }
+
+//     return {
+//         getInstance: function () {
+//             if (instance == null) {
+//                 instance = createInstance();
+//             }
+//             return instance;
+//         }
+//     };
+// })();
+
+// export default Singleton;
+
+//////////////////////////////////////////
+
+// useEffect( async () => {
+//     const eleitoresArray = [];
+//     const numero = await props.contract.methods.numeroEleitores().call();
+//     setNumeroEleitor(numero);
+//     for (let i = 1; i <= numero; i++) {
+//         const eleitor = await props.contract.methods.listaEleitores(i).call();
+//         if(eleitor[5] !== "0x0000000000000000000000000000000000000000"){
+//             eleitoresArray.push({'nome': eleitor[0], 'bi': eleitor[1], 'voto': eleitor[2], 'direito': eleitor[3], 'registo': eleitor[4], 'endereco' :eleitor[5]});
+//         }
+//     }
+//     setEleitores([...eleitores, eleitoresArray]);
+// },[]);
+
+ {/* {eleitores.map((student) => (
+        Array.from({ length: numeroEleitor }).map((_, index) => (
+            <caption>Lista de eleitores{student[index].nome} {index}</caption>
+        ))
+    ))} */}
+
+    ///////////////////////////////////////
+
+    import Web3 from "web3";
+
+const getWeb3 = () =>
+  new Promise((resolve, reject) => {
+    // Aguarde a conclusão do carregamento para evitar condições de corrida com o tempo de injeção de web3.
+    window.addEventListener("load", async () => {
+    /*Verificar se estamos usando navegadores dapp
+      modernos ou as versões mais recentes do MetaMask, 
+      onde um ethereum provedor é injectado no window objeto*/
+      if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        try {
+          // Solicitar acesso as contas, se necessário
+          await window.ethereum.enable();
+          // Contas agora expostas
+          resolve(web3);
+        } catch (error) {
+          reject(error);
+          console.error("Acesso negado ao usuário à conta");
+        }
+      }
+      // Legacy dapp browsers...
+      // verificar se há uma web3 instância injectada
+      else if (window.web3) {
+        // Use Mist/MetaMask's provider.
+        const web3 = window.web3;
+        resolve(web3);
+        console.log("Web3 injetado detectado.");
+      }
+      // Fallback para localhost; usar a porta do console dev por padrão ...
+      else {
+        const provider = new Web3.providers.HttpProvider(
+          "http://127.0.0.1:7545"
+        );
+        const web3 = new Web3(provider);
+        console.log("Nenhuma instância web3 injetada, usando Web3 local.");
+        resolve(web3);
+      }
+    });
+  });
+
+export default getWeb3;
+
+///////////////////////////////
+function useForceUpdate(){
+    const [value, setValue] = useState(0); 
+    return () => setState(!value);
+    // return () => setValue(value => value + 1); 
+}
