@@ -6,6 +6,7 @@ contract Eleicao {
     address public recenseador;
     uint256 public numeroEleitores;
     uint256 public numeroCandidatos;
+    uint256 public numeroVotos;
 
     mapping(string => bool) public bilhetes;
     mapping(address => Eleitor) public eleitor;
@@ -13,11 +14,6 @@ contract Eleicao {
     mapping(uint256 => Eleitor) public listaEleitores;
 
     constructor() public {
-        adicionarCandidato("Antonio");
-        adicionarCandidato("Jose");
-        adicionarCandidato("Buaio");
-        adicionarCandidato("Teca");
-
         recenseador = msg.sender;
     }
 
@@ -48,6 +44,7 @@ contract Eleicao {
 
     // Eventos
 
+    event RegistadoCandidato(string nome);
     event Registado(string nome, string bi, address endereco);
     event DireitoVoto(string nome, string bi);
     event Votado(string votou);
@@ -56,9 +53,10 @@ contract Eleicao {
 
     // Funções
 
-    function adicionarCandidato(string memory nome) private {
+    function registarCandidato(string memory nome) public {
         numeroCandidatos++;
         candidatos[numeroCandidatos] = Candidato(numeroCandidatos, nome, 0);
+        emit RegistadoCandidato(nome);
     }
 
     function registarEleitor(
@@ -107,7 +105,7 @@ contract Eleicao {
         emit DireitoVoto(eleitor[endereco].nome, eleitor[endereco].bi);
     }
 
-    function votar(uint256 candidatoId, uint256 eleitorId) public {
+    function votar(uint256 candidatoId) public {
         Eleitor memory _eleitor = eleitor[msg.sender];
 
         require(
@@ -127,7 +125,9 @@ contract Eleicao {
             "Erro no ID e no numero de candidatos."
         );
 
-        listaEleitores[eleitorId].voto = true;
+        numeroVotos++;
+
+        listaEleitores[ eleitor[_eleitor.endereco].id].voto = true;
         eleitor[_eleitor.endereco].voto = true;
 
         candidatos[candidatoId].numeroVoto++;

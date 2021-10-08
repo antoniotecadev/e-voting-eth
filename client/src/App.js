@@ -5,6 +5,7 @@ import logo from './logo.png';
 import Home from './components/Home';
 import Registo from './components/Registo';
 import Urna from './components/Urna';
+import Estado from './components/Estado';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Eleicao from "./contracts/Eleicao.json";
 import { Switch, Route, Link } from "react-router-dom";
@@ -156,9 +157,7 @@ const NavBar = (props) => {
                       <Nav.Link href="/urna"as={Link} to="/urna" eventKey = "link3">URNA</Nav.Link>
                   </Nav.Item>
                   <Nav.Item>
-                      <Nav.Link eventKey="disabled" disabled>
-                      Disabled
-                      </Nav.Link>
+                      <Nav.Link href="/estado"as={Link} to="/estado" eventKey = "link4">ESTADO</Nav.Link>
                   </Nav.Item>
               </Nav>
               <Nav>
@@ -177,10 +176,13 @@ const NavBar = (props) => {
               <Registo contract = {props.contract} accounts = {props.accounts} registar = {props.registar} alertRegisto = {props.alertShow} fecharAlert = {props.fecharAlert} alertSuccess = {props.alertSuccess} nome = {props.nome} bi = {props.bi} endereco = {props.endereco}/>
           </Route>
           <Route path="/urna">
-              <Urna path="/urna"/>
+              <Urna contract={props.contract} accounts={props.accounts}/>
+          </Route>
+          <Route path="/estado">
+              <Estado contract={props.contract} web3 = {props.web3}/>
           </Route>
           <Route exact path="/">
-              <Home />
+              <Home contract={props.contract} />
           </Route>
       </Switch>
   </>
