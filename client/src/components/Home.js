@@ -10,13 +10,6 @@ export default function Home(props) {
         <Card.Header><h3 className="text-primary"><Badge pill bg="primary">RESULTADOS EM TEMPO REAL</Badge></h3></Card.Header>
         <Card.Body>
           <Table bordered responsive hover>
-            <thead>
-              <tr class= 'table-primary'>
-                <th>#</th>
-                <th>CANDIDATOS</th>
-                <th>VOTOS</th>
-              </tr>
-            </thead>
             <tbody>
               <ListaCandidatos contract={props.contract}/>
             </tbody>
@@ -48,8 +41,6 @@ const ListaCandidatos = (props) => {
         setCandidatos((candidatos) => [...candidatos, candidato]);
       }
     }, []);
-
-  
     return (
       <>
         <tr>
@@ -61,6 +52,11 @@ const ListaCandidatos = (props) => {
                 <Badge pill bg="danger"><h6>Votos não efectuados ({Number(numeroEleitores) - Number(numeroVotos)})</h6></Badge>
             </td>
             <td></td>
+        </tr>
+        <tr class= 'table-primary'>
+            <th>#</th>
+            <th>CANDIDATOS</th>
+            <th>VOTOS</th>
         </tr>
         {candidatos.map((candidato, key) => {
 
