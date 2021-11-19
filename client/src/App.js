@@ -9,7 +9,7 @@ import Estado from './components/Estado';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Eleicao from "./contracts/Eleicao.json";
 import { Switch, Route, Link } from "react-router-dom";
-import {Container, Navbar, Nav, Toast, Col, Row, Button, ToastContainer} from 'react-bootstrap';
+import {Container, Navbar, Nav, Toast, Col, Row, Spinner, ToastContainer} from 'react-bootstrap';
 
 
 export default class App extends Component {
@@ -116,7 +116,7 @@ export default class App extends Component {
   render() {
     
     if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+      return <Spinner animation="border" variant="primary" />
     }
     return (
         <NavBar registar = {this.registarEleitor} fecharAlert = {this.closeAlert} {...this.state}/>

@@ -42,6 +42,7 @@ function FormularioRegisto(props) {
         props.contract.events.RegistadoCandidato({})
         .on('data', (event) => {
             alert("CANDIDATO REGISTADO ✔ \n" + event.returnValues[0]);
+            window.location.reload();
         })
         .on('error', async function(event){
         console.log(event.returnValues);

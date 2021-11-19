@@ -6,6 +6,14 @@ import Badge from "react-bootstrap/Badge";
 import Container from "react-bootstrap/Container";
 import "bootstrap/dist/css/bootstrap.min.css";
 import teca from "./teca.png";
+import img1 from "./img1.jpg";
+import img2 from "./img2.jpg";
+import img3 from "./img3.jpg";
+import img4 from "./img4.jpg";
+import img5 from "./img5.jpg";
+import img6 from "./img6.jpg";
+import img7 from "./img7.jpg";
+import img8 from "./img8.jpg";
 
 export default function Urna(props) {
   return (
@@ -72,7 +80,20 @@ const ListaCandidatos = (props) => {
     }
   };
 
+  var images = [], index = 0;
+  images[0] = img2;
+  images[1] = img1;
+  images[2] = img3;
+  images[3] = img4;
+  images[4] = img5;
+  images[5] = img6;
+  images[6] = img7;
+  images[7] = img8;
+  // index = Math.floor(Math.random() * images.length);
+  // document.write(images[index]);
+
   return (
+
     <>
       {candidatos.map((candidato, key) => {
         return (
@@ -80,13 +101,13 @@ const ListaCandidatos = (props) => {
             <td>
               <h1>{key + 1}</h1>
             </td>
-            <td className= 'table-warning'>
-              <img src={teca} className="img-thumbnail img-fluid"/>
+            <td>
+              <img src={images[key]} className="img-fluid" alt={images[7]}/>
             </td>
             <td className= 'table-info'>
               <h1>{candidato.nome}</h1>
             </td>
-            <td className= 'table-success'>
+            <td>
               <ToggleButton
                 id={candidato.id}
                 type="checkbox"
