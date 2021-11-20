@@ -1,4 +1,6 @@
 const path = require("path");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const mnemonic = "elite disease reward mom sunny question potato crisp strategy any discover essay";
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -17,6 +19,12 @@ module.exports = {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*" // Match any network id
+    },
+    ropsten: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/846f90b7e3b943c1963f5d02e5eeb8bb")
+      },
+      network_id: 3
     }
     
   }

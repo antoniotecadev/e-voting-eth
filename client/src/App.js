@@ -140,7 +140,7 @@ const NavBar = (props) => {
                       height="100"
                       className="d-inline-block"
                       />
-                  <p class="fw-bolder mx-1 text-light text-muted">E-VOTING</p>
+                  <p class="fw-bolder mx-1 text-light text-muted">VOTECA</p>
                   </Nav.Link>
               </Nav.Item>
           </Navbar.Brand>
