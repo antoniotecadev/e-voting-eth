@@ -1,5 +1,8 @@
 import Web3 from "web3";
 
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const mnemonic = "elite disease reward mom sunny question potato crisp strategy any discover essay";
+
 const getWeb3 = () =>
   new Promise((resolve, reject) => {
     // Aguarde a conclusão do carregamento para evitar condições de corrida com o tempo de injeção de web3.
@@ -29,11 +32,13 @@ const getWeb3 = () =>
       }
       // Fallback para localhost; usar a porta do console dev por padrão ...
       else {
-        const provider = new Web3.providers.HttpProvider(
-          "http://127.0.0.1:7545"
-        );
+
+        const provider = new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/846f90b7e3b943c1963f5d02e5eeb8bb");
+        // const provider = new Web3.providers.HttpProvider(
+        //   "http://127.0.0.1:7545"
+        // );
         const web3 = new Web3(provider);
-        console.log("Nenhuma instância web3 injetada, usando Web3 local.");
+        // console.log("Nenhuma instância web3 injetada, usando Web3 local.");
         resolve(web3);
       }
     });
