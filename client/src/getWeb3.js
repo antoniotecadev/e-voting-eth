@@ -1,13 +1,14 @@
 import Web3 from "web3";
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const mnemonic = "elite disease reward mom sunny question potato crisp strategy any discover essay";
+const mnemonic =
+  "elite disease reward mom sunny question potato crisp strategy any discover essay";
 
 const getWeb3 = () =>
   new Promise((resolve, reject) => {
     // Aguarde a conclusão do carregamento para evitar condições de corrida com o tempo de injeção de web3.
     window.addEventListener("load", async () => {
-    /*Verificar se estamos usando navegadores dapp
+      /*Verificar se estamos usando navegadores dapp
       modernos ou as versões mais recentes do MetaMask, 
       onde um ethereum provedor é injectado no window objeto*/
       if (window.ethereum) {
@@ -32,8 +33,10 @@ const getWeb3 = () =>
       }
       // Fallback para localhost; usar a porta do console dev por padrão ...
       else {
-
-        const provider = new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/846f90b7e3b943c1963f5d02e5eeb8bb");
+        const provider = new HDWalletProvider(
+          mnemonic,
+          "https://ropsten.infura.io/v3/9867ca24f45742a596ca5b4afddf148a"
+        );
         // const provider = new Web3.providers.HttpProvider(
         //   "http://127.0.0.1:7545"
         // );

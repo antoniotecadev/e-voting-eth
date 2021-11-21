@@ -163,7 +163,7 @@ const NavBar = (props) => {
               <Nav>
                   <Nav.Link>End.</Nav.Link>
                       <Nav.Link eventKey={2}>
-                          {props.accounts}
+                          {props.accounts[0]}
                       </Nav.Link>
               </Nav>
           </Navbar.Collapse>

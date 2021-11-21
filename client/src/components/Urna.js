@@ -102,7 +102,7 @@ const ListaCandidatos = (props) => {
               <h1>{key + 1}</h1>
             </td>
             <td>
-              <img src={images[key]} className="img-fluid" alt={images[7]}/>
+              <img src={images[key]} className="img-fluid"/>
             </td>
             <td className= 'table-info'>
               <h1>{candidato.nome}</h1>
