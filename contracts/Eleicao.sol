@@ -1,6 +1,5 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.9.0;
-
 contract Eleicao {
 
     address public recenseador;
@@ -12,13 +11,10 @@ contract Eleicao {
     mapping(address => Eleitor) public eleitor;
     mapping(uint256 => Candidato) public candidatos;
     mapping(uint256 => Eleitor) public listaEleitores;
-
     constructor() public {
         recenseador = msg.sender;
     }
-
     // Estrutura (Model)
-
     struct Candidato {
         uint256 id;
         string nome;
@@ -41,9 +37,7 @@ contract Eleicao {
         require(msg.sender == recenseador, mensagem);
         _;
     }
-
     // Eventos
-
     event RegistadoCandidato(string nome);
     event Registado(string nome, string bi, address endereco);
     event DireitoVoto(string nome, string bi);

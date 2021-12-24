@@ -33,15 +33,15 @@ const getWeb3 = () =>
       }
       // Fallback para localhost; usar a porta do console dev por padrão ...
       else {
-        const provider = new HDWalletProvider(
-          mnemonic,
-          "https://ropsten.infura.io/v3/9867ca24f45742a596ca5b4afddf148a"
-        );
-        // const provider = new Web3.providers.HttpProvider(
-        //   "http://127.0.0.1:7545"
+        // const provider = new HDWalletProvider(
+        //   mnemonic,
+        //   "https://ropsten.infura.io/v3/9867ca24f45742a596ca5b4afddf148a"
         // );
+        const provider = new Web3.providers.HttpProvider(
+          "http://127.0.0.1:7545"
+        );
         const web3 = new Web3(provider);
-        // console.log("Nenhuma instância web3 injetada, usando Web3 local.");
+        console.log("Nenhuma instância web3 injetada, usando Web3 local.");
         resolve(web3);
       }
     });

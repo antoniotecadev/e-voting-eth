@@ -15,7 +15,7 @@ export default function Home(props) {
             </tbody>
           </Table>
         </Card.Body>
-        <Card.Footer className="text-muted"><h3>Votação Electrónica (Blockchain)</h3></Card.Footer>
+        <Card.Footer className="text-muted"><h3>Voto Electrónico (Blockchain)</h3></Card.Footer>
       </Card>
     </Container>
     );
