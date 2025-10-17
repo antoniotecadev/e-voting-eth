@@ -106,3 +106,10 @@ Licenciado em Engenharia Informática
 **Instituto Superior Politécnico Metropolitano de Angola (IMETRO)**
 
 📍 Luanda — Angola
+
+---
+
+## 📄 Monografia Completa
+
+Podes consultar o trabalho completo aqui:  
+[📘 E-Voting: Sistema de Votação Electrónica utilizando Blockchain — António José Buaio Teca (IMETRO)](https://1drv.ms/b/c/d2397eff8e6a4ea8/EZOJGxzwzddFiSZS2Kux_yUB6i8BmLcvmTUu2-JPeXIBsQ?e=EjjevJ)
